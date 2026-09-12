@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>c5c27e92-a47e-443e-99e8-56d95d5eeba0</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EduCenterSys.Application\EduCenterSys.Application.csproj" />
+    <ProjectReference Include="..\EduCenterSys.Infrastructure\EduCenterSys.Infrastructure.csproj" />
+    <ProjectReference Include="..\EduCenterSys.Domain\EduCenterSys.Domain.csproj" />
+  </ItemGroup>
+
+
+</Project>
