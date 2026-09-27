@@ -48,9 +48,9 @@ public abstract class BaseService<T, TDtoRead, TDtoCreate, TDtoUpdate>
         if (pageSize > maxPageSize) pageSize = maxPageSize;
 
         return await repository.GetQueryable()
-                        .ProjectTo<TDtoRead>(mapper.ConfigurationProvider)
                         .Skip((pageIndex - 1) * pageSize)
                         .Take(pageSize)
+                        .ProjectTo<TDtoRead>(mapper.ConfigurationProvider)
                         .ToListAsync(cancellationToken);
     }
 
@@ -76,8 +76,6 @@ public abstract class BaseService<T, TDtoRead, TDtoCreate, TDtoUpdate>
     public virtual async Task UpdateAsync(int id, TDtoUpdate updateDto, CancellationToken cancellationToken = default)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(id);
-
-        //ArgumentNullException.ThrowIfNull(updateDto);
 
         var entity = await repository.GetByIdAsync(id, cancellationToken)
                             ?? throw new KeyNotFoundException($"Entity with id {id} was not found.");

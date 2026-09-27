@@ -12,15 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduCenterSys.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260905231043_init")]
-    partial class init
+    [Migration("20260913224751_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.11")
+                .HasAnnotation("ProductVersion", "10.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -136,6 +136,9 @@ namespace EduCenterSys.Infrastructure.Migrations
 
                     b.HasIndex("GradeId");
 
+                    b.HasIndex("Name", "GradeId")
+                        .IsUnique();
+
                     b.ToTable("Students");
                 });
 
@@ -225,7 +228,10 @@ namespace EduCenterSys.Infrastructure.Migrations
             modelBuilder.Entity("EduCenterSys.Domain.Entities.TeacherQualification", b =>
                 {
                     b.Property<int>("TeacherQualificationId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TeacherQualificationId"));
 
                     b.Property<int>("GradeId")
                         .HasColumnType("int");
@@ -237,6 +243,12 @@ namespace EduCenterSys.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("TeacherQualificationId");
+
+                    b.HasIndex("GradeId");
+
+                    b.HasIndex("SubjectId");
+
+                    b.HasIndex("TeacherId");
 
                     b.ToTable("TeacherQualification");
                 });
@@ -313,19 +325,19 @@ namespace EduCenterSys.Infrastructure.Migrations
                 {
                     b.HasOne("EduCenterSys.Domain.Entities.Grade", "Grade")
                         .WithMany("TeacherQualifications")
-                        .HasForeignKey("TeacherQualificationId")
+                        .HasForeignKey("GradeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("EduCenterSys.Domain.Entities.Subject", "Subject")
                         .WithMany("TeacherQualifications")
-                        .HasForeignKey("TeacherQualificationId")
+                        .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("EduCenterSys.Domain.Entities.Teacher", "Teacher")
                         .WithMany("Qualifications")
-                        .HasForeignKey("TeacherQualificationId")
+                        .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

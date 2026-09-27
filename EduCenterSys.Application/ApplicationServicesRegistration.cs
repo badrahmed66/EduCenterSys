@@ -13,10 +13,12 @@ public static class ApplicationServicesRegistration
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-        services.AddScoped<IStudentService,StudentService>();
+        services.AddScoped<IStudentService, StudentService>();
+        services.AddScoped<ITeacherService, TeacherService>();
+        services.AddScoped<ITeacherQualificationService, TeacherQualificationService>();
 
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         return services;
     }
-}
+}   

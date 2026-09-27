@@ -11,19 +11,19 @@ public class TeacherQualificationConfiguration : IEntityTypeConfiguration<Teache
     {
         builder.HasOne(t => t.Teacher)
                 .WithMany(teach => teach.Qualifications)
-                .HasForeignKey(t => t.TeacherQualificationId)
+                .HasForeignKey(t => t.TeacherId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
 
         builder.HasOne(t => t.Grade)
                 .WithMany(g => g.TeacherQualifications)
-                .HasForeignKey(t => t.TeacherQualificationId)
+                .HasForeignKey(t => t.GradeId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
 
         builder.HasOne(t => t.Subject)
                 .WithMany(s => s.TeacherQualifications)
-                .HasForeignKey(t => t.TeacherQualificationId)
+                .HasForeignKey(t => t.SubjectId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
     }

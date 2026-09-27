@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EduCenterSys.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -115,7 +115,8 @@ namespace EduCenterSys.Infrastructure.Migrations
                 name: "TeacherQualification",
                 columns: table => new
                 {
-                    TeacherQualificationId = table.Column<int>(type: "int", nullable: false),
+                    TeacherQualificationId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     TeacherId = table.Column<int>(type: "int", nullable: false),
                     SubjectId = table.Column<int>(type: "int", nullable: false),
                     GradeId = table.Column<int>(type: "int", nullable: false)
@@ -124,20 +125,20 @@ namespace EduCenterSys.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_TeacherQualification", x => x.TeacherQualificationId);
                     table.ForeignKey(
-                        name: "FK_TeacherQualification_Grades_TeacherQualificationId",
-                        column: x => x.TeacherQualificationId,
+                        name: "FK_TeacherQualification_Grades_GradeId",
+                        column: x => x.GradeId,
                         principalTable: "Grades",
                         principalColumn: "GradeId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_TeacherQualification_Subjects_TeacherQualificationId",
-                        column: x => x.TeacherQualificationId,
+                        name: "FK_TeacherQualification_Subjects_SubjectId",
+                        column: x => x.SubjectId,
                         principalTable: "Subjects",
                         principalColumn: "SubjectId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_TeacherQualification_Teachers_TeacherQualificationId",
-                        column: x => x.TeacherQualificationId,
+                        name: "FK_TeacherQualification_Teachers_TeacherId",
+                        column: x => x.TeacherId,
                         principalTable: "Teachers",
                         principalColumn: "TeacherId",
                         onDelete: ReferentialAction.Restrict);
@@ -222,6 +223,27 @@ namespace EduCenterSys.Infrastructure.Migrations
                 name: "IX_Students_GradeId",
                 table: "Students",
                 column: "GradeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Students_Name_GradeId",
+                table: "Students",
+                columns: new[] { "Name", "GradeId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TeacherQualification_GradeId",
+                table: "TeacherQualification",
+                column: "GradeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TeacherQualification_SubjectId",
+                table: "TeacherQualification",
+                column: "SubjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TeacherQualification_TeacherId",
+                table: "TeacherQualification",
+                column: "TeacherId");
         }
 
         /// <inheritdoc />

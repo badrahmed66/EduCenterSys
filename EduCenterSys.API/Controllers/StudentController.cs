@@ -27,7 +27,7 @@ public class StudentController(IStudentService service) : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> Add(StudentDtos.Create dto, CancellationToken cancellationToken)
+    public async Task<ActionResult> AddAsync(StudentDtos.Create dto, CancellationToken cancellationToken)
     {
         if (dto is null)
             return BadRequest();
@@ -39,14 +39,14 @@ public class StudentController(IStudentService service) : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id, CancellationToken ct)
+    public async Task<IActionResult> DeleteAsync(int id, CancellationToken ct)
     {
         await service.DeleteAsync(id, ct);
         return NoContent();
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, StudentDtos.Update dto, CancellationToken ct)
+    public async Task<IActionResult> UpdateAsync(int id, StudentDtos.Update dto, CancellationToken ct)
     {
         await service.UpdateAsync(id, dto, ct);
         return NoContent();

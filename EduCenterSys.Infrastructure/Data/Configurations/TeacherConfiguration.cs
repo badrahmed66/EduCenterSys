@@ -25,5 +25,12 @@ public class TeacherConfiguration : IEntityTypeConfiguration<Teacher>
         builder.Property(t => t.PhoneNumber)
                 .HasMaxLength(20)
                 .IsRequired();
+        
+        builder.Property(t => t.NationalId)
+                .HasMaxLength(14)
+                .IsRequired();
+        
+        builder.HasIndex(t => t.NationalId)
+                .IsUnique();
     }
 }
