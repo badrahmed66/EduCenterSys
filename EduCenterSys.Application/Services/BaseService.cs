@@ -64,7 +64,7 @@ public abstract class BaseService<T, TDtoRead, TDtoCreate, TDtoUpdate>
                         .GetQueryable()
                         .Where(e => EF.Property<int>(e, primaryKeyName) == id)
                         .ProjectTo<TDtoRead>(mapper.ConfigurationProvider)
-                        .FirstOrDefaultAsync(cancellationToken) ?? throw new KeyNotFoundException($"Entity with id {id} was not found.");
+                        .FirstOrDefaultAsync(cancellationToken) ?? throw new KeyNotFoundException($"{typeof(T).Name} entity with id {id} was not found.");
         return result;
     }
 

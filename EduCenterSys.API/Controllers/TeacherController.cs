@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EduCenterSys.API.Controllers;
 
 [ApiController]
-[Route("[Controller]")]
+[Route("api/[Controller]")]
 public class TeacherController(ITeacherService service) : ControllerBase
 {
     [HttpGet]
@@ -75,5 +75,5 @@ public class TeacherController(ITeacherService service) : ControllerBase
         return NoContent();
     }
 
-   
+
 }

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EduCenterSys.API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class StudentController(IStudentService service) : ControllerBase
 {
     [HttpGet()]
