@@ -1,6 +1,8 @@
 
+using System.Linq.Expressions;
 using AutoMapper;
 using EduCenterSys.Application.DTOs;
+using EduCenterSys.Application.Helpers;
 using EduCenterSys.Application.Interfaces;
 using EduCenterSys.Domain.Entities;
 using EduCenterSys.Domain.Interfaces;
@@ -11,28 +13,24 @@ public class TeacherService : BaseService<Teacher, TeacherDtos.Read, TeacherDtos
 {
     private readonly ITeacherQualificationService _qualification;
     private readonly IGenericRepository<Teacher> _genericRepository;
-    //private readonly IMapper _mapper;
     public TeacherService(
         IGenericRepository<Teacher> genericRepository,
         IUnitOfWork unitOfWork, IMapper mapper,
         ITeacherQualificationService qualification) : base(genericRepository, unitOfWork, mapper)
     {
         _genericRepository = genericRepository;
-        //_mapper = mapper;
         _qualification = qualification;
     }
 
-    public async override Task<TeacherDtos.Read> AddAsync(TeacherDtos.Create dto, CancellationToken ct = default)
+    protected override Expression<Func<Teacher, bool>>? GetDuplicateCheckExpression(TeacherDtos.Create dto)
     {
-        if (await IsRegistered(dto.NationalId, ct))
-            throw new InvalidOperationException("Teacher has already registered");
-
-        return await base.AddAsync(dto, ct);
+        return t => t.NationalId == dto.NationalId;
     }
 
-    private async Task<bool> IsRegistered(string nationalId, CancellationToken ct) => await _genericRepository
-                    .IsExistsAsync(t => t.NationalId == nationalId, ct);
-
+    protected override Expression<Func<Teacher, bool>>? GetDuplicateCheckExpression(TeacherDtos.Update dto, int id)
+    {
+        return t => t.NationalId == dto.NationalId && id != t.TeacherId;
+    }
     public async Task<TeacherQualificationDtos.Read> AddQualificationAsync(int teacherId, TeacherQualificationDtos.Create dto, CancellationToken ct = default)
     {
         var qualificationToAdd = new TeacherQualificationDtos.Create
@@ -51,6 +49,6 @@ public class TeacherService : BaseService<Teacher, TeacherDtos.Read, TeacherDtos
     }
     public async Task DeleteQualificationAsync(int teacherId, int qualificationId, CancellationToken ct = default) => await _qualification.DeleteAsync(teacherId, qualificationId, ct);
 
-    public async Task UpdateQualificationAsync(int teacherId, int qualificationId, TeacherQualificationDtos.Update dto,CancellationToken ct = default) => await _qualification.UpdateAsync(teacherId,qualificationId, dto, ct);
+    public async Task UpdateQualificationAsync(int teacherId, int qualificationId, TeacherQualificationDtos.Update dto, CancellationToken ct = default) => await _qualification.UpdateAsync(teacherId, qualificationId, dto, ct);
 
 }

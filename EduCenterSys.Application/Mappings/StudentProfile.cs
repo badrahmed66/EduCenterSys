@@ -1,5 +1,6 @@
 using AutoMapper;
 using EduCenterSys.Application.DTOs;
+using EduCenterSys.Application.Helpers;
 using EduCenterSys.Domain.Entities;
 namespace EduCenterSys.Application.Mappings;
 
@@ -14,6 +15,7 @@ public class StudentProfile : Profile
         CreateMap<StudentDtos.Create, Student>();
 
         // convert dto from updating behavior to an entity [Writing behaviors]
-        CreateMap<StudentDtos.Update, Student>();
+        CreateMap<StudentDtos.Update, Student>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
     }
 }

@@ -9,12 +9,11 @@ public class TeacherQualificationProfile : Profile
 {
     public TeacherQualificationProfile()
     {
-        CreateMap<TeacherQualification, TeacherQualificationDtos.Read>()
-            .ForMember(dest => dest.GradeName, opt => opt.MapFrom(src => src.Grade.Name))
-            .ForMember(dest => dest.SubjectName, opt => opt.MapFrom(src => src.Subject.Name));
+        CreateMap<TeacherQualification, TeacherQualificationDtos.Read>();
 
         CreateMap<TeacherQualificationDtos.Create, TeacherQualification>();
 
-        CreateMap<TeacherQualificationDtos.Update, TeacherQualification>();
+        CreateMap<TeacherQualificationDtos.Update, TeacherQualification>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
     }
 }
