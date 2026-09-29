@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using EduCenterSys.API.ExceptionHandlers;
 using EduCenterSys.Application;
 using EduCenterSys.Infrastructure;
@@ -9,7 +10,11 @@ builder.Services.AddControllers(options =>
 {
     // يمنع ASP.NET Core من حذف كلمة Async من أسماء الـ Actions أثناء الـ Routing
     options.SuppressAsyncSuffixInActionNames = false;
+}).AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
+
 builder.Services.AddOpenApi();
 
 builder.Services.AddApplicationServices();

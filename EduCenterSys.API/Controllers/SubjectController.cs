@@ -9,9 +9,12 @@ namespace EduCenterSys.API.Controllers;
 [Route("api/[controller]")]
 public class SubjectController(ISubjectService service) : ControllerBase
 {
-    [HttpGet()]
-    public async Task<ActionResult<IReadOnlyList<SubjectDtos.Read>>> GetAllAsync(CancellationToken ct = default)
-    => Ok(await service.GetAllAsync(cancellationToken: ct));
+    [HttpGet]
+    public async Task<ActionResult<IReadOnlyList<SubjectDtos.Read>>> GetAllAsync(int pageIndex = 1, int pageSize = 50, CancellationToken ct = default)
+    {
+        var result = await service.GetAllAsync(pageIndex, pageSize, ct);
+        return Ok(result);
+    }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<SubjectDtos.Read?>> GetByIdAsync(int id, CancellationToken ct = default) => Ok(await service.GetByIdAsync(id, ct));
