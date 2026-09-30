@@ -19,7 +19,10 @@ public class GlobalExceptionHandler : IExceptionHandler
 
             UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, "Unauthorized"),
 
+            InvalidOperationException => (StatusCodes.Status409Conflict,""),
+
             DbUpdateException ex when ex.InnerException?.Message.Contains("FOREIGN KEY") == true => (StatusCodes.Status400BadRequest, "Foreign Key Constraint Failed,The referenced entity or ID does not exist."),
+
 
             _ => (StatusCodes.Status500InternalServerError, "Internal Server Error")
         };

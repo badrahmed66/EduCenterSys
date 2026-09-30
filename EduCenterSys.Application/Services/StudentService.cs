@@ -1,5 +1,7 @@
+using System.Linq.Expressions;
 using AutoMapper;
 using EduCenterSys.Application.DTOs;
+using EduCenterSys.Application.Helpers;
 using EduCenterSys.Application.Interfaces;
 using EduCenterSys.Domain.Entities;
 using EduCenterSys.Domain.Interfaces;
@@ -8,37 +10,23 @@ namespace EduCenterSys.Application.Services;
 
 public class StudentService : BaseService<Student, StudentDtos.Read, StudentDtos.Create, StudentDtos.Update>, IStudentService
 {
-    private readonly IGenericRepository<Student> _repository;
-    private readonly IGenericRepository<Grade> _gradeRepo;
     public StudentService(IGenericRepository<Student> repository,
     IGenericRepository<Grade> gradeRepo,
     IUnitOfWork unitOfWork,
     IMapper mapper) : base(repository, unitOfWork, mapper)
     {
-        _repository = repository;
-        _gradeRepo = gradeRepo;
+
     }
 
-    public override async Task<StudentDtos.Read> AddAsync(StudentDtos.Create dto, CancellationToken cancellationToken = default)
+    protected override Expression<Func<Student, bool>>? GetDuplicateCheckExpression(StudentDtos.Create dto)
     {
-        // insure student didn't register before.
-        if (await IsStudentAlreadyRegistered(dto.Name, dto.GradeId, cancellationToken))
-            throw new InvalidOperationException("Student already registered");
-
-        // insure the user insert an exist grade
-        if(! await IsGradeExists(dto.GradeId,cancellationToken))
-            throw new KeyNotFoundException("Invalid Grade Id");
-
-        return await base.AddAsync(dto, cancellationToken);
+        var cleanName = dto.Name.ToStandardFormat();
+        return s => s.Name == cleanName && s.GradeId == dto.GradeId;
     }
 
-    private async Task<bool> IsStudentAlreadyRegistered(string name, int gradeId, CancellationToken cancellationToken)
+    protected override Expression<Func<Student, bool>>? GetDuplicateCheckExpression(StudentDtos.Update dto, int id)
     {
-        return await _repository
-                    .IsExistsAsync(s => s.Name == name && s.GradeId == gradeId, cancellationToken);
+        var cleanName = dto.Name.ToStandardFormat();
+        return s => s.Name == cleanName && s.GradeId == dto.GradeId && id != s.StudentId;
     }
-
-    private async Task<bool> IsGradeExists(int gradeId, CancellationToken ct)
-    => await _gradeRepo
-                .IsExistsAsync(g => g.GradeId == gradeId, ct);
 }

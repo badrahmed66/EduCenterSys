@@ -36,21 +36,19 @@ public class StudentDtos
     }
     public record Update
     {
-        [Required, MaxLength(50)]
-        public string Name { get; init; } = string.Empty;
-
-        [Required]
+        [MaxLength(50)]
+        public string? Name { get; init; }
+        
         [RegularExpression(@"^01[0125]\d{8}$")]
-        public string PhoneNumber { get; init; } = string.Empty;
+        public string? PhoneNumber { get; init; }
 
-        [Required, MaxLength(100)]
-        public string Address { get; init; } = string.Empty;
+        [MaxLength(100)]
+        public string? Address { get; init; }
 
-        [Required]
         [RegularExpression(@"^01[0125]\d{8}$")]
-        public string GuardianPhoneNumber { get; init; } = string.Empty;
+        public string? GuardianPhoneNumber { get; init; }
 
-        [Required, Range(1, int.MaxValue)]
-        public int GradeId { get; init; }
+        [Range(1, int.MaxValue)]
+        public int? GradeId { get; init; }
     }
 }

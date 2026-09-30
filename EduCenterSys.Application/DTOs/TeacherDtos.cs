@@ -34,6 +34,7 @@ public class TeacherDtos
         [RegularExpression(@"^01[0125]\d{8}$")]
         public string PhoneNumber { get; init; } = string.Empty;
 
+        [Required]
         [EnumDataType(typeof(EntityStatus))]
         public EntityStatus Status { get; init; }
 
@@ -42,18 +43,20 @@ public class TeacherDtos
 
     public record Update
     {
-        [Required, Length(5, 50)]
+        [Length(5, 50)]
         public string? Name { get; init; }
 
-        [Required, Length(5, 100)]
+        [Length(5, 100)]
         public string? Address { get; init; }
 
-        [Required]
+        [Length(14, 14)]
+        public string? NationalId { get; init; }
+
         [RegularExpression(@"^01[0125]\d{8}$")]
         public string? PhoneNumber { get; init; }
 
         [EnumDataType(typeof(EntityStatus))]
-        public EntityStatus Status { get; init; }
+        public EntityStatus? Status { get; init; }
 
     }
 

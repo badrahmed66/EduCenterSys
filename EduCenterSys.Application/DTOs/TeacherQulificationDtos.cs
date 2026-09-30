@@ -1,5 +1,6 @@
 
 using System.ComponentModel.DataAnnotations;
+using EduCenterSys.Domain.Enums;
 
 namespace EduCenterSys.Application.DTOs;
 
@@ -10,7 +11,7 @@ public class TeacherQualificationDtos
         public int TeacherQualificationId { get; private set; }
 
         public string SubjectName { get; init; } = string.Empty;
-        public string GradeName { get; init; } = string.Empty;
+        public GradeLevel GradeLevel { get; init; }
     }
 
     public record Create
@@ -25,7 +26,7 @@ public class TeacherQualificationDtos
     }
     public record Update
     {
-        public required int SubjectId { get; init; }
-        public required int GradeId { get; init; }
+        public  int? SubjectId { get; init; }
+        public  int? GradeId { get; init; }
     }
 }

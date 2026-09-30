@@ -4,6 +4,7 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using System.Data.Common;
+using System.Linq.Expressions;
 namespace EduCenterSys.Application.Services;
 
 public abstract class BaseService<T, TDtoRead, TDtoCreate, TDtoUpdate>
@@ -13,8 +14,23 @@ public abstract class BaseService<T, TDtoRead, TDtoCreate, TDtoUpdate>
     where TDtoUpdate : class
     where T : class
 {
+    protected virtual Expression<Func<T, bool>>? GetDuplicateCheckExpression(TDtoCreate dto) => null;
+
+    protected virtual Expression<Func<T, bool>>? GetDuplicateCheckExpression(TDtoUpdate dto, int id) => null;
+
     public virtual async Task<TDtoRead> AddAsync(TDtoCreate createDto, CancellationToken cancellationToken = default)
     {
+        // check if the record exists in the system or not
+        var duplicatePredicate = GetDuplicateCheckExpression(createDto);
+
+        if (duplicatePredicate != null)
+        {
+            bool existsResult = await repository.IsExistsAsync(duplicatePredicate, cancellationToken);
+
+            if (existsResult)
+                throw new InvalidOperationException("This Record Already exists in the system");
+        }
+
         var entityToAdd = mapper.Map<T>(createDto);
 
         await repository.AddAsync(entityToAdd, cancellationToken);
@@ -64,7 +80,7 @@ public abstract class BaseService<T, TDtoRead, TDtoCreate, TDtoUpdate>
                         .GetQueryable()
                         .Where(e => EF.Property<int>(e, primaryKeyName) == id)
                         .ProjectTo<TDtoRead>(mapper.ConfigurationProvider)
-                        .FirstOrDefaultAsync(cancellationToken) ?? throw new KeyNotFoundException($"Entity with id {id} was not found.");
+                        .FirstOrDefaultAsync(cancellationToken) ?? throw new KeyNotFoundException($"{typeof(T).Name} entity with id {id} was not found.");
         return result;
     }
 
@@ -79,6 +95,17 @@ public abstract class BaseService<T, TDtoRead, TDtoCreate, TDtoUpdate>
 
         var entity = await repository.GetByIdAsync(id, cancellationToken)
                             ?? throw new KeyNotFoundException($"Entity with id {id} was not found.");
+
+        // check if the record exists in the system or not
+        var duplicatePredicate = GetDuplicateCheckExpression(updateDto, id);
+
+        if (duplicatePredicate != null)
+        {
+            bool existsResult = await repository.IsExistsAsync(duplicatePredicate, cancellationToken);
+
+            if (existsResult)
+                throw new InvalidOperationException("This Record Already exists in the system");
+        }
 
         mapper.Map(updateDto, entity);
 

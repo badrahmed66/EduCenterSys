@@ -17,8 +17,11 @@ public static class ApplicationServicesRegistration
         services.AddScoped<ITeacherService, TeacherService>();
         services.AddScoped<ITeacherQualificationService, TeacherQualificationService>();
 
+        services.AddScoped<ISubjectService, SubjectService>();
+
+        services.AddScoped<IGradeService, GradeService>();
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         return services;
     }
-}   
+}

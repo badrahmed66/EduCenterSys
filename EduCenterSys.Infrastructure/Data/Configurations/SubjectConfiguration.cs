@@ -11,6 +11,7 @@ public class SubjectConfiguration : IEntityTypeConfiguration<Subject>
     {
         builder.Property(s => s.Name)
                 .HasMaxLength(50)
+                .IsUnicode()
                 .IsRequired();
     }
 }

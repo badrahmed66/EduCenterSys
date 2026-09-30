@@ -9,8 +9,8 @@ public class GradeConfiguration : IEntityTypeConfiguration<Grade>
 {
     public void Configure(EntityTypeBuilder<Grade> builder)
     {
-        builder.Property(g => g.Name)
-                .HasMaxLength(100)
+        builder.Property(g => g.Level)
+                .IsUnicode()
                 .IsRequired();
     }
 }
