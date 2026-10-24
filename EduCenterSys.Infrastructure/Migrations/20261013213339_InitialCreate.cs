@@ -17,7 +17,7 @@ namespace EduCenterSys.Infrastructure.Migrations
                 {
                     GradeId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    Level = table.Column<byte>(type: "tinyint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -43,6 +43,7 @@ namespace EduCenterSys.Infrastructure.Migrations
                 {
                     TeacherId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    NationalId = table.Column<string>(type: "nvarchar(14)", maxLength: 14, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(100)", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
@@ -148,18 +149,19 @@ namespace EduCenterSys.Infrastructure.Migrations
                 name: "GroupSchedule",
                 columns: table => new
                 {
-                    GroupScheduleId = table.Column<int>(type: "int", nullable: false),
+                    GroupScheduleId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Day = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    StartHour = table.Column<byte>(type: "tinyint", nullable: false),
-                    EndHour = table.Column<byte>(type: "tinyint", nullable: false),
+                    StartHour = table.Column<TimeOnly>(type: "time", nullable: false),
+                    EndHour = table.Column<TimeOnly>(type: "time", nullable: false),
                     GroupId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_GroupSchedule", x => x.GroupScheduleId);
                     table.ForeignKey(
-                        name: "FK_GroupSchedule_Groups_GroupScheduleId",
-                        column: x => x.GroupScheduleId,
+                        name: "FK_GroupSchedule_Groups_GroupId",
+                        column: x => x.GroupId,
                         principalTable: "Groups",
                         principalColumn: "GroupId",
                         onDelete: ReferentialAction.Restrict);
@@ -172,7 +174,7 @@ namespace EduCenterSys.Infrastructure.Migrations
                     StudentEnrollmentId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EnrollmentDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    InactivateDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    InactivateDate = table.Column<DateOnly>(type: "date", nullable: true),
                     Status = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     StudentId = table.Column<int>(type: "int", nullable: false),
                     GroupId = table.Column<int>(type: "int", nullable: false)
@@ -210,6 +212,11 @@ namespace EduCenterSys.Infrastructure.Migrations
                 column: "TeacherId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_GroupSchedule_GroupId",
+                table: "GroupSchedule",
+                column: "GroupId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_StudentEnrollments_GroupId",
                 table: "StudentEnrollments",
                 column: "GroupId");
@@ -244,6 +251,12 @@ namespace EduCenterSys.Infrastructure.Migrations
                 name: "IX_TeacherQualification_TeacherId",
                 table: "TeacherQualification",
                 column: "TeacherId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Teachers_NationalId",
+                table: "Teachers",
+                column: "NationalId",
+                unique: true);
         }
 
         /// <inheritdoc />

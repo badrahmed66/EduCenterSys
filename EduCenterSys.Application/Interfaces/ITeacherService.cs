@@ -1,10 +1,13 @@
 
 using EduCenterSys.Application.DTOs;
+using EduCenterSys.Domain.Enums;
 
 namespace EduCenterSys.Application.Interfaces;
 
 public interface ITeacherService
 {
+    Task<bool> ExistsAsync(int id, CancellationToken ct);
+    Task<bool> IsQualified(int id, int subjectId, int gradeId, CancellationToken ct);
     Task<IReadOnlyList<TeacherDtos.Read>> GetAllAsync(int pageIndex = 1, int pageSize = 10, CancellationToken cancellationToken = default);
 
     Task<TeacherDtos.Read> GetByIdAsync(int id, CancellationToken ct = default);

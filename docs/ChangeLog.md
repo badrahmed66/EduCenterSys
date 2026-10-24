@@ -60,3 +60,9 @@
     - `BaseService` will perform the logic regardless the logic itself.
 
 ---
+## [0.4.6] -2026-10-24
+### Added
+- Add  CRUD operations to handle with `Group` part.
+- validate the schedules of the group before adding.
+
+---

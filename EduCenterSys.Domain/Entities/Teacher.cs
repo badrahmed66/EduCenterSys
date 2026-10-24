@@ -5,7 +5,7 @@ namespace EduCenterSys.Domain.Entities;
 public class Teacher
 {
     private Teacher() { }
-    public Teacher(string name, string address, string phoneNumber, EntityStatus status, string nationalId)
+    public Teacher(string name, string address, string phoneNumber, Status status, string nationalId)
     {
         Name = name;
         Address = address;
@@ -18,7 +18,7 @@ public class Teacher
     public string Name { get; private set; } = string.Empty;
     public string Address { get; private set; } = string.Empty;
     public string PhoneNumber { get; private set; } = string.Empty;
-    public EntityStatus Status { get; private set; }
+    public Status Status { get; private set; }
     public ICollection<Group> Groups { get; private set; } = [];
     public ICollection<TeacherQualification> Qualifications { get; private set; } = [];
 }

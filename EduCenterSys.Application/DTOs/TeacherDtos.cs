@@ -13,7 +13,7 @@ public class TeacherDtos
         public string Name { get; init; } = string.Empty;
         public string Address { get; init; } = string.Empty;
         public string PhoneNumber { get; init; } = string.Empty;
-        public EntityStatus Status { get; init; }
+        public Status Status { get; init; }
         public byte GroupsNumbers { get; init; }
 
         public IReadOnlyCollection<TeacherQualificationDtos.Read> Qualifications { get; init; } = [];
@@ -35,8 +35,8 @@ public class TeacherDtos
         public string PhoneNumber { get; init; } = string.Empty;
 
         [Required]
-        [EnumDataType(typeof(EntityStatus))]
-        public EntityStatus Status { get; init; }
+        [EnumDataType(typeof(Status))]
+        public Status Status { get; init; }
 
         public IReadOnlyCollection<TeacherQualificationDtos.Create> Qualifications { get; init; } = [];
     }
@@ -55,8 +55,8 @@ public class TeacherDtos
         [RegularExpression(@"^01[0125]\d{8}$")]
         public string? PhoneNumber { get; init; }
 
-        [EnumDataType(typeof(EntityStatus))]
-        public EntityStatus? Status { get; init; }
+        [EnumDataType(typeof(Status))]
+        public Status? Status { get; init; }
 
     }
 

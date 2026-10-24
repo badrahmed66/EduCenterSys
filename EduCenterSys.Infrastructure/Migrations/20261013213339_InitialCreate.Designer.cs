@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduCenterSys.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260913224751_InitialCreate")]
+    [Migration("20261013213339_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -33,10 +33,9 @@ namespace EduCenterSys.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GradeId"));
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<byte>("Level")
+                        .IsUnicode(true)
+                        .HasColumnType("tinyint");
 
                     b.HasKey("GradeId");
 
@@ -82,23 +81,28 @@ namespace EduCenterSys.Infrastructure.Migrations
             modelBuilder.Entity("EduCenterSys.Domain.Entities.GroupSchedule", b =>
                 {
                     b.Property<int>("GroupScheduleId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GroupScheduleId"));
 
                     b.Property<string>("Day")
                         .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<byte>("EndHour")
-                        .HasColumnType("tinyint");
+                    b.Property<TimeOnly>("EndHour")
+                        .HasColumnType("time");
 
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
 
-                    b.Property<byte>("StartHour")
-                        .HasColumnType("tinyint");
+                    b.Property<TimeOnly>("StartHour")
+                        .HasColumnType("time");
 
                     b.HasKey("GroupScheduleId");
+
+                    b.HasIndex("GroupId");
 
                     b.ToTable("GroupSchedule");
                 });
@@ -156,7 +160,7 @@ namespace EduCenterSys.Infrastructure.Migrations
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly>("InactivateDate")
+                    b.Property<DateOnly?>("InactivateDate")
                         .HasColumnType("date");
 
                     b.Property<string>("Status")
@@ -187,6 +191,7 @@ namespace EduCenterSys.Infrastructure.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("SubjectId");
@@ -210,6 +215,11 @@ namespace EduCenterSys.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("NationalId")
+                        .IsRequired()
+                        .HasMaxLength(14)
+                        .HasColumnType("nvarchar(14)");
+
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -221,6 +231,9 @@ namespace EduCenterSys.Infrastructure.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.HasKey("TeacherId");
+
+                    b.HasIndex("NationalId")
+                        .IsUnique();
 
                     b.ToTable("Teachers");
                 });
@@ -284,7 +297,7 @@ namespace EduCenterSys.Infrastructure.Migrations
                 {
                     b.HasOne("EduCenterSys.Domain.Entities.Group", "Group")
                         .WithMany("Schedules")
-                        .HasForeignKey("GroupScheduleId")
+                        .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

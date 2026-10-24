@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using System.Data.Common;
 using System.Linq.Expressions;
+using EduCenterSys.Application.Exceptions;
 namespace EduCenterSys.Application.Services;
 
 public abstract class BaseService<T, TDtoRead, TDtoCreate, TDtoUpdate>
@@ -14,23 +15,27 @@ public abstract class BaseService<T, TDtoRead, TDtoCreate, TDtoUpdate>
     where TDtoUpdate : class
     where T : class
 {
+
     protected virtual Expression<Func<T, bool>>? GetDuplicateCheckExpression(TDtoCreate dto) => null;
 
     protected virtual Expression<Func<T, bool>>? GetDuplicateCheckExpression(TDtoUpdate dto, int id) => null;
 
+    protected virtual Task ValidateBeforeCreateAsync(TDtoCreate dto, CancellationToken ct = default) => Task.CompletedTask;
+
+    protected virtual Task ValidateBeforeUpdateAsync(int id, TDtoUpdate dto, T entity, CancellationToken ct = default) => Task.CompletedTask;
     public virtual async Task<TDtoRead> AddAsync(TDtoCreate createDto, CancellationToken cancellationToken = default)
     {
         // check if the record exists in the system or not
-        var duplicatePredicate = GetDuplicateCheckExpression(createDto);
+        var expr = GetDuplicateCheckExpression(createDto);
 
-        if (duplicatePredicate != null)
-        {
-            bool existsResult = await repository.IsExistsAsync(duplicatePredicate, cancellationToken);
+        if (expr != null && await repository.IsExistsAsync(expr, cancellationToken))
+            throw new InvalidOperationException("Already exists");
 
-            if (existsResult)
-                throw new InvalidOperationException("This Record Already exists in the system");
-        }
+        // check on complex condition
+        // in group(if the schedule conflict with other schedules for the samel teacher)
+        await ValidateBeforeCreateAsync(createDto, cancellationToken);
 
+        // start to implement the business steps
         var entityToAdd = mapper.Map<T>(createDto);
 
         await repository.AddAsync(entityToAdd, cancellationToken);
@@ -84,9 +89,16 @@ public abstract class BaseService<T, TDtoRead, TDtoCreate, TDtoUpdate>
         return result;
     }
 
-    public virtual Task SoftDeleteAsync(int id, CancellationToken cancellationToken = default)
+    public async virtual Task SoftDeleteAsync(int id, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var entity = await repository.GetByIdAsync(id, cancellationToken) ?? throw new KeyNotFoundException($"Entity with id {id} was not found");
+
+        repository.SoftDelete(entity);
+
+        var rowEffected = await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        if (rowEffected <= 0)
+            throw new ConflictException("Sorry,Something went wrong");
     }
 
     public virtual async Task UpdateAsync(int id, TDtoUpdate updateDto, CancellationToken cancellationToken = default)
@@ -104,8 +116,11 @@ public abstract class BaseService<T, TDtoRead, TDtoCreate, TDtoUpdate>
             bool existsResult = await repository.IsExistsAsync(duplicatePredicate, cancellationToken);
 
             if (existsResult)
-                throw new InvalidOperationException("This Record Already exists in the system");
+                throw new ConflictException("This Record Already exists in the system");
         }
+
+        // for complex validation (the record has list, conflicted schedules)
+        await ValidateBeforeUpdateAsync(id, updateDto, entity, cancellationToken);
 
         mapper.Map(updateDto, entity);
 

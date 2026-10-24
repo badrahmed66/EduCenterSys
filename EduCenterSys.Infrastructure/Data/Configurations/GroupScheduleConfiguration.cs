@@ -16,10 +16,14 @@ public class GroupScheduleConfiguration : IEntityTypeConfiguration<GroupSchedule
 
         builder.HasOne(g => g.Group)
                 .WithMany(g => g.Schedules)
-                .HasForeignKey(g => g.GroupScheduleId)
+                .HasForeignKey(g => g.GroupId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
+        builder.Property(g => g.StartHour)
+                .HasColumnType("time");
 
+        builder.Property(g => g.EndHour)
+                .HasColumnType("time");
     }
 }

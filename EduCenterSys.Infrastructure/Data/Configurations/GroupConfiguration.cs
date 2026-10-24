@@ -30,5 +30,7 @@ public class GroupConfiguration : IEntityTypeConfiguration<Group>
                 .WithMany(t => t.Groups)
                 .HasForeignKey(t => t.TeacherId)
                 .OnDelete(DeleteBehavior.Restrict);
+        
+        builder.HasQueryFilter(g => !g.IsDeleted);
     }
 }

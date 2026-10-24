@@ -8,7 +8,7 @@ public class TeacherQualificationDtos
 {
     public record Read
     {
-        public int TeacherQualificationId { get; private set; }
+        public int TeacherQualificationId { get; init; }
 
         public string SubjectName { get; init; } = string.Empty;
         public GradeLevel GradeLevel { get; init; }
@@ -26,7 +26,7 @@ public class TeacherQualificationDtos
     }
     public record Update
     {
-        public  int? SubjectId { get; init; }
-        public  int? GradeId { get; init; }
+        public int? SubjectId { get; init; }
+        public int? GradeId { get; init; }
     }
 }

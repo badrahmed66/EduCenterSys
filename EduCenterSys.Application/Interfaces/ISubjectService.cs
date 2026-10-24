@@ -5,6 +5,7 @@ namespace EduCenterSys.Application.Interfaces;
 
 public interface ISubjectService
 {
+    Task<bool> ExistsAsync(int id, CancellationToken ct);
     Task<IReadOnlyList<SubjectDtos.Read>> GetAllAsync(int pageIndex = 1, int pageSize = 10, CancellationToken cancellationToken = default);
 
     Task<SubjectDtos.Read> GetByIdAsync(int id, CancellationToken ct = default);

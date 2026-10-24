@@ -12,7 +12,6 @@ public class TeacherProfile : Profile
 {
     public TeacherProfile()
     {
-        //CreateMap<string?, string?>().ConvertUsing<CleanStringConverter>();
 
         CreateMap<Teacher, TeacherDtos.Read>()
               .ForMember(dest => dest.GroupsNumbers, opt => opt.MapFrom(src => (byte)(src.Groups != null ? src.Groups.Count : 0)));

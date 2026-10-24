@@ -74,4 +74,8 @@ public class TeacherQualificationService : BaseService<TeacherQualification, Tea
         if (rowEffected <= 0)
             throw new InvalidOperationException($"Failed to update qualification with ID {qulalificationId}");
     }
+
+    public async Task<bool> IsQualifiedAsync(int teacherId, int subjectId, int gradeId, CancellationToken ct)
+        => await _repository.IsExistsAsync(q => q.TeacherId == teacherId
+        && q.SubjectId == subjectId && q.GradeId == gradeId, ct);
 }

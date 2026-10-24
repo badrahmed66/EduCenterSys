@@ -50,8 +50,7 @@ public class GenericRepository<T>(AppDbContext context) : IGenericRepository<T> 
 
         if (entity is ISoftDelete softDeleteEntity)
         {
-            softDeleteEntity.IsDeleted = true;
-            softDeleteEntity.DeletedAt = DateTimeOffset.UtcNow;
+            softDeleteEntity.MarkAsDeleted();
             context.Set<T>().Update(entity);
         }
         else
@@ -67,4 +66,6 @@ public class GenericRepository<T>(AppDbContext context) : IGenericRepository<T> 
                         .AnyAsync(predicate, cancellationToken);
 
     }
+
+
 }

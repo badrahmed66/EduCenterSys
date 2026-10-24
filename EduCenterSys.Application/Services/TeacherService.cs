@@ -1,10 +1,12 @@
 
+using System.Data.Common;
 using System.Linq.Expressions;
 using AutoMapper;
 using EduCenterSys.Application.DTOs;
 using EduCenterSys.Application.Helpers;
 using EduCenterSys.Application.Interfaces;
 using EduCenterSys.Domain.Entities;
+using EduCenterSys.Domain.Enums;
 using EduCenterSys.Domain.Interfaces;
 
 namespace EduCenterSys.Application.Services;
@@ -13,14 +15,20 @@ public class TeacherService : BaseService<Teacher, TeacherDtos.Read, TeacherDtos
 {
     private readonly ITeacherQualificationService _qualification;
     private readonly IGenericRepository<Teacher> _genericRepository;
+
     public TeacherService(
         IGenericRepository<Teacher> genericRepository,
         IUnitOfWork unitOfWork, IMapper mapper,
-        ITeacherQualificationService qualification) : base(genericRepository, unitOfWork, mapper)
+        ITeacherQualificationService qualification,
+        IGenericRepository<TeacherQualification> qualificationRepo
+        ) : base(genericRepository, unitOfWork, mapper)
     {
         _genericRepository = genericRepository;
         _qualification = qualification;
     }
+
+    public Task<bool> ExistsAsync(int id, CancellationToken ct)
+        => _genericRepository.IsExistsAsync(t => t.TeacherId == id, ct);
 
     protected override Expression<Func<Teacher, bool>>? GetDuplicateCheckExpression(TeacherDtos.Create dto)
     {
@@ -42,6 +50,10 @@ public class TeacherService : BaseService<Teacher, TeacherDtos.Read, TeacherDtos
 
         return await _qualification.AddAsync(qualificationToAdd, ct);
     }
+
+
+    public async Task<bool> IsQualified(int id, int subjectId, int gradeId, CancellationToken ct)
+     => await _qualification.IsQualifiedAsync(id, subjectId, gradeId, ct);
 
     public async Task<IReadOnlyList<TeacherQualificationDtos.Read>> GetAllQualificationAsync(int teacherId, int pageIndex = 1, int pageSize = 10, CancellationToken ct = default)
     {

@@ -1,14 +1,18 @@
 
+using EduCenterSys.Application.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace EduCenterSys.API.ExceptionHandlers;
 
-public class GlobalExceptionHandler : IExceptionHandler
+public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
+
+        logger.LogError(exception, "Unhandled exception on {Path}", httpContext.Request.Path);
+
         var (statusCode, title) = exception switch
         {
             KeyNotFoundException => (StatusCodes.Status404NotFound, "Resource not found"),
@@ -19,7 +23,8 @@ public class GlobalExceptionHandler : IExceptionHandler
 
             UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, "Unauthorized"),
 
-            InvalidOperationException => (StatusCodes.Status409Conflict,""),
+            // Customized
+            ConflictException => (StatusCodes.Status409Conflict, "Conflict"),
 
             DbUpdateException ex when ex.InnerException?.Message.Contains("FOREIGN KEY") == true => (StatusCodes.Status400BadRequest, "Foreign Key Constraint Failed,The referenced entity or ID does not exist."),
 
@@ -33,12 +38,13 @@ public class GlobalExceptionHandler : IExceptionHandler
         {
             Status = statusCode,
             Title = title,
-            Detail = exception.Message,
+            Detail = statusCode == StatusCodes.Status500InternalServerError ? "An unexpected error occured." : exception.Message,
             Instance = httpContext.Request.Path
         };
 
 
         await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
         return true;
+        
     }
 }

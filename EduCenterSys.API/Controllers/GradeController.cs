@@ -41,4 +41,6 @@ public class GradeController(IGradeService service) : ControllerBase
         await service.UpdateAsync(id, dto, ct);
         return NoContent();
     }
+
+
 }
