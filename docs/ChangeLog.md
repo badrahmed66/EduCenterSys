@@ -66,3 +66,8 @@
 - validate the schedules of the group before adding.
 
 ---
+## [0.4.7] -2026-10-25
+### Added
+- replace the paging from separated variables(pageIndex,pageSize) by Paging Record
+
+---

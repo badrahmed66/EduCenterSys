@@ -6,6 +6,7 @@ using AutoMapper;
 using System.Data.Common;
 using System.Linq.Expressions;
 using EduCenterSys.Application.Exceptions;
+using EduCenterSys.Application.Validations;
 namespace EduCenterSys.Application.Services;
 
 public abstract class BaseService<T, TDtoRead, TDtoCreate, TDtoUpdate>
@@ -60,17 +61,17 @@ public abstract class BaseService<T, TDtoRead, TDtoCreate, TDtoUpdate>
             throw new InvalidOperationException($"Failed to delete Student with ID {id}.");
     }
 
-    public virtual async Task<IReadOnlyList<TDtoRead>> GetAllAsync(int pageIndex = 1, int pageSize = 10, CancellationToken cancellationToken = default)
+    public virtual async Task<IReadOnlyList<TDtoRead>> GetAllAsync(PagingQuery page, CancellationToken cancellationToken = default)
     {
-        const int maxPageSize = 50;
+        // const int maxPageSize = 50;
 
-        if (pageIndex < 1) pageIndex = 1;
-        if (pageSize < 1) pageSize = 10;
-        if (pageSize > maxPageSize) pageSize = maxPageSize;
+        // if (pageIndex < 1) pageIndex = 1;
+        // if (pageSize < 1) pageSize = 10;
+        // if (pageSize > maxPageSize) pageSize = maxPageSize;
 
         return await repository.GetQueryable()
-                        .Skip((pageIndex - 1) * pageSize)
-                        .Take(pageSize)
+                        .Skip((page.PageIndex - 1) * page.PageSize)
+                        .Take(page.PageSize)
                         .ProjectTo<TDtoRead>(mapper.ConfigurationProvider)
                         .ToListAsync(cancellationToken);
     }

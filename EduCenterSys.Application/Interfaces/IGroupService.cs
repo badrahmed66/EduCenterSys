@@ -1,11 +1,12 @@
 
 using EduCenterSys.Application.DTOs;
+using EduCenterSys.Application.Validations;
 
 namespace EduCenterSys.Application.Interfaces;
 
 public interface IGroupService
 {
-    Task<IReadOnlyList<GroupDtos.Read>> GetAllAsync(int pageIndex = 1, int pageSize = 50, CancellationToken ct = default);
+    Task<IReadOnlyList<GroupDtos.Read>> GetAllAsync(PagingQuery page, CancellationToken ct = default);
 
     Task<GroupDtos.Read> GetByIdAsync(int id, CancellationToken ct = default);
 

@@ -1,6 +1,7 @@
 
 using EduCenterSys.Application.DTOs;
 using EduCenterSys.Application.Interfaces;
+using EduCenterSys.Application.Validations;
 using EduCenterSys.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,9 +12,9 @@ namespace EduCenterSys.API.Controllers;
 public class StudentController(IStudentService service) : ControllerBase
 {
     [HttpGet()]
-    public async Task<ActionResult<IReadOnlyList<StudentDtos.Read>>> GetAll()
+    public async Task<ActionResult<IReadOnlyList<StudentDtos.Read>>> GetAll([FromQuery] PagingQuery page , CancellationToken ct = default)
     {
-        var result = await service.GetAllAsync();
+        var result = await service.GetAllAsync(page,ct);
 
         return Ok(result);
     }

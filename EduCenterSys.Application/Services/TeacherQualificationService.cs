@@ -4,6 +4,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using EduCenterSys.Application.DTOs;
 using EduCenterSys.Application.Interfaces;
+using EduCenterSys.Application.Validations;
 using EduCenterSys.Domain.Entities;
 using EduCenterSys.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -22,20 +23,20 @@ public class TeacherQualificationService : BaseService<TeacherQualification, Tea
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IReadOnlyList<TeacherQualificationDtos.Read>> GetAllAsync(int teacherId, int pageIndex = 1, int pageSize = 10, CancellationToken ct = default)
+    public async Task<IReadOnlyList<TeacherQualificationDtos.Read>> GetAllAsync(int teacherId, PagingQuery page, CancellationToken ct = default)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(teacherId);
 
-        const int maxPageSize = 50;
+        // const int maxPageSize = 50;
 
-        if (pageIndex < 1) pageIndex = 1;
-        if (pageSize < 1) pageSize = 10;
-        if (pageSize > maxPageSize) pageSize = maxPageSize;
+        // if (page.PageIndex < 1) page.PageIndex = 1;
+        // if (pageSize < 1) pageSize = 10;
+        // if (pageSize > maxPageSize) pageSize = maxPageSize;
 
         var result = await _repository.GetQueryable()
                         .Where(q => q.TeacherId == teacherId)
-                        .Skip((pageIndex - 1) * pageSize)
-                        .Take(pageSize)
+                        .Skip((page.PageIndex - 1) * page.PageSize)
+                        .Take(page.PageSize)
                         .ProjectTo<TeacherQualificationDtos.Read>(_mapper.ConfigurationProvider)
                         .ToListAsync(ct) ?? throw new KeyNotFoundException($"Teacher with {teacherId} is not found");
         return result;

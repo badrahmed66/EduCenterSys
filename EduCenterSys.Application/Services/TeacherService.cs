@@ -5,6 +5,7 @@ using AutoMapper;
 using EduCenterSys.Application.DTOs;
 using EduCenterSys.Application.Helpers;
 using EduCenterSys.Application.Interfaces;
+using EduCenterSys.Application.Validations;
 using EduCenterSys.Domain.Entities;
 using EduCenterSys.Domain.Enums;
 using EduCenterSys.Domain.Interfaces;
@@ -55,12 +56,13 @@ public class TeacherService : BaseService<Teacher, TeacherDtos.Read, TeacherDtos
     public async Task<bool> IsQualified(int id, int subjectId, int gradeId, CancellationToken ct)
      => await _qualification.IsQualifiedAsync(id, subjectId, gradeId, ct);
 
-    public async Task<IReadOnlyList<TeacherQualificationDtos.Read>> GetAllQualificationAsync(int teacherId, int pageIndex = 1, int pageSize = 10, CancellationToken ct = default)
+    public async Task<IReadOnlyList<TeacherQualificationDtos.Read>> GetAllQualificationAsync(int teacherId, PagingQuery page, CancellationToken ct = default)
     {
-        return await _qualification.GetAllAsync(teacherId, pageIndex, pageSize, ct);
+        return await _qualification.GetAllAsync(teacherId, page, ct);
     }
     public async Task DeleteQualificationAsync(int teacherId, int qualificationId, CancellationToken ct = default) => await _qualification.DeleteAsync(teacherId, qualificationId, ct);
 
     public async Task UpdateQualificationAsync(int teacherId, int qualificationId, TeacherQualificationDtos.Update dto, CancellationToken ct = default) => await _qualification.UpdateAsync(teacherId, qualificationId, dto, ct);
 
+  
 }

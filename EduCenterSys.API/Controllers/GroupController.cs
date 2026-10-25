@@ -27,9 +27,9 @@ public class GroupController(IGroupService service) : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<GroupDtos.Read>>> GetAllAsync([FromQuery] PagingQuery paging, CancellationToken ct = default)
+    public async Task<ActionResult<IReadOnlyList<GroupDtos.Read>>> GetAllAsync([FromQuery] PagingQuery page, CancellationToken ct = default)
     {
-        var result = await service.GetAllAsync(paging.PageIndex, paging.PageSize, ct);
+        var result = await service.GetAllAsync(page, ct);
 
         return Ok(result);
     }

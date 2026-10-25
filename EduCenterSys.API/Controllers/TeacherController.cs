@@ -1,6 +1,7 @@
 
 using EduCenterSys.Application.DTOs;
 using EduCenterSys.Application.Interfaces;
+using EduCenterSys.Application.Validations;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EduCenterSys.API.Controllers;
@@ -10,9 +11,9 @@ namespace EduCenterSys.API.Controllers;
 public class TeacherController(ITeacherService service) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<TeacherDtos.Read>>> GetAllAsync()
+    public async Task<ActionResult<IReadOnlyList<TeacherDtos.Read>>> GetAllAsync([FromQuery] PagingQuery page, CancellationToken ct = default)
     {
-        var result = await service.GetAllAsync();
+        var result = await service.GetAllAsync(page, ct);
 
         return Ok(result);
     }
@@ -54,9 +55,9 @@ public class TeacherController(ITeacherService service) : ControllerBase
     }
 
     [HttpGet("{teacherId}/qualification")]
-    public async Task<ActionResult<TeacherQualificationDtos.Read>> GetAllQualifications(int teacherId, CancellationToken ct = default)
+    public async Task<ActionResult<TeacherQualificationDtos.Read>> GetAllQualifications(int teacherId, [FromQuery] PagingQuery page, CancellationToken ct = default)
     {
-        var result = await service.GetAllQualificationAsync(teacherId: teacherId, ct: ct);
+        var result = await service.GetAllQualificationAsync(teacherId, page, ct);
 
         return Ok(result);
     }
