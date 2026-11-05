@@ -71,3 +71,13 @@
 - replace the paging from separated variables(pageIndex,pageSize) by Paging Record
 
 ---
+## [0.4.8] - 2026-11-06
+### Added
+- implement the `Add Schedules` service and API Endpoint within `Group` controller.
+---
+
+---
+## [0.4.9] - 2026-11-06
+**### Changed**
+\- move schedule validation logic to the Domain `ScheduleValidator` to centralize and reuse the validatoin rules.
+---
