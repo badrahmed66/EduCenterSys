@@ -1,4 +1,4 @@
-
+using EduCenterSys.Domain.Interfaces;
 namespace EduCenterSys.Application.DTOs;
 
 public class GroupScheduleDtos

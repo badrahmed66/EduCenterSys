@@ -6,7 +6,6 @@ using EduCenterSys.Application.Validations.Group;
 using EduCenterSys.Infrastructure;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +24,7 @@ builder.Services.AddControllers(options =>
 });
 
 // for register all the Validation's classes one time
-builder.Services.AddValidatorsFromAssemblyContaining<CreateGroupDtosValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateGroupScheduleDtoValidator>();
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true

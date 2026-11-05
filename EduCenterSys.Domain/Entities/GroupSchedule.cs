@@ -1,7 +1,9 @@
 ﻿
+using EduCenterSys.Domain.Interfaces;
+
 namespace EduCenterSys.Domain.Entities;
 
-public class GroupSchedule
+public class GroupSchedule : IScheduleSlot
 {
     private GroupSchedule() { }
     public GroupSchedule(DayOfWeek day, TimeOnly startHour, TimeOnly endHour, int groupId)

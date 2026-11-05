@@ -49,4 +49,11 @@ public class GroupController(IGroupService service) : ControllerBase
         return NoContent();
     }
 
+    [HttpPost("{groupId:int:min(1)}/Schedules")]
+    public async Task<IActionResult> AddSchedules(int groupId, List<GroupScheduleDtos.Create> schedules, CancellationToken ct = default)
+    {
+        var result = await service.AddSchedules(groupId, schedules, ct);
+
+        return StatusCode(StatusCodes.Status201Created, result);
+    }
 }

@@ -1,6 +1,7 @@
 
 using EduCenterSys.Application.DTOs;
 using EduCenterSys.Application.Validations;
+using EduCenterSys.Domain.Interfaces;
 
 namespace EduCenterSys.Application.Interfaces;
 
@@ -17,4 +18,6 @@ public interface IGroupService
     Task DeleteAsync(int id, CancellationToken ct = default);
 
     Task SoftDeleteAsync(int id, CancellationToken ct = default);
+
+    Task<IReadOnlyList<GroupScheduleDtos.Read>> AddSchedules(int groupId, IEnumerable<IScheduleSlot> schedules, CancellationToken ct);
 }

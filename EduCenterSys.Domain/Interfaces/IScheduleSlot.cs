@@ -1,5 +1,5 @@
 
-namespace EduCenterSys.Application.DTOs;
+namespace EduCenterSys.Domain.Interfaces;
 
 public interface IScheduleSlot
 {

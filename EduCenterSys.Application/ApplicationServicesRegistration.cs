@@ -25,7 +25,7 @@ public static class ApplicationServicesRegistration
 
         //services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-        services.AddValidatorsFromAssemblyContaining<CreateGroupDtosValidator>();
+        services.AddValidatorsFromAssemblyContaining<CreateGroupScheduleDtoValidator>();
         return services;
     }
 }
